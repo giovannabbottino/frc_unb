@@ -1,0 +1,5 @@
+#define SERVER_HOST 127.0.0.1 
+#define SERVER_PORT 5050
+
+#define CLIENT_HOST 127.0.0.1 
+#define CLIENT_PORT 5053
