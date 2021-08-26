@@ -20,8 +20,8 @@ int main(int argc, char *argv[]){
 	  exit(0); 
     }
     
-    /* Verificou se o PDU é um número */
-    if (isdigit(atoi(argv[0])) == 0 ){
+    /* Verifica se o PDU é um número */
+    if (isdigit(argv[0]) == 0 ){
         perror("SERVER: O PDU de enlace deve ser um número\n");
 	    exit(0); 
     }
