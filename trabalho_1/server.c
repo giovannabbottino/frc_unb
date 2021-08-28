@@ -14,9 +14,9 @@
 int main(int argc, char *argv[]){
     int server, client;
     int pdu; /* o tamanho da mensagem */
-    socklen_t cliente_size;
+    socklen_t client_size;
 
-    struct sockaddr_in address, client_address; /* socket do servidor e cliente  */
+    struct sockaddr_in server_address, client_address; /* socket do servidor e cliente  */
 
     printf("SERVER: Verifica se o PDU foi enviado pelo argc\n");
     /* Verifica se o PDU foi enviado pelo argc  */
@@ -48,12 +48,12 @@ int main(int argc, char *argv[]){
     }
     
     /* Preenchendo informacoes sobre o servidor */
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr(SERVER_HOST); 
-    address.sin_port = htons(SERVER_PORT);
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr(SERVER_HOST); 
+    server_address.sin_port = htons(SERVER_PORT);
 
     /* Conecta na porta */
-    if (bind(server, (struct sockaddr *)&address, sizeof(address))<0){
+    if (bind(server, (struct sockaddr *)&server_address, sizeof(server_address))<0){
         perror("SERVER: Não pode fazer bind na porta SERVER_PORT");
         exit(0);
     }
@@ -65,8 +65,8 @@ int main(int argc, char *argv[]){
 
     while(1){
         /* Aceita conexoes direta entre o servidor e cliente */
-        cliente_size = sizeof(client_address);
-        if ( client = accept(server, (struct sockaddr *) &client_address, &cliente_size) == 1 ){
+        client_size = sizeof(client_address);
+        if ( client = accept(server, (struct sockaddr *) &client_address, &client_size) == 1 ){
             perror("SERVER: Não pode dar accept na CLIENT_PORT");
             exit(0);
         }
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
         /* Receber fila de mensagens*/
 
         /* imprime a mensagem recebida na tela do usuario */
-        printf("SERVER: {UDP, IP_L: %s, Porta_L: %u", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+        printf("SERVER: {UDP, IP_L: %s, Porta_L: %u", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
         printf("SERVER: IP_R: %s, Porta_R: %u} => %s\n",inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), message);
     }   
 }
