@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     char message[pdu];
     printf("SERVER: PDU: %d\n", pdu);
 
-    /* Criacao do socket UDP */
+    /* Criacao do socket TCP */
     if ((server = socket(AF_INET, SOCK_STREAM, 0)) == 0){ 
         /*
         * ARPA INTERNET PROTOCOLS -- IPv4
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
     /*  numero maximo de conexões */
     listen(server, 5);
 
-    printf("SERVER: Esperando por dados no IP: %s, porta UDP numero: %d\n", SERVER_HOST, SERVER_PORT);
+    printf("SERVER: Esperando por dados no IP: %s, porta TCP numero: %d\n", SERVER_HOST, SERVER_PORT);
 
     while(1){
         /* Aceita conexoes direta entre o servidor e cliente */
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
         /* Receber fila de mensagens*/
 
         /* imprime a mensagem recebida na tela do usuario */
-        printf("SERVER: {UDP, IP_L: %s, Porta_L: %u", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+        printf("SERVER: {TPC, IP_L: %s, Porta_L: %u", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
         printf("SERVER: IP_R: %s, Porta_R: %u} => %s\n",inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port), message);
     }   
 }
