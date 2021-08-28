@@ -31,4 +31,10 @@ int main(int argc, char *argv[]) {
     client_address.sin_family = AF_INET;
     client_address.sin_addr.s_addr = inet_addr(CLIENT_HOST); 
     client_address.sin_port = htons(CLIENT_PORT);
+
+    /* Conecta na porta */
+    if (bind(client, (struct sockaddr *)&client_address, sizeof(client_address))<0){
+        perror("CLIENT: Não pode fazer bind na porta CLIENT_PORT");
+        exit(0);
+    }
 }
