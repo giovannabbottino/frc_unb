@@ -4,6 +4,7 @@
 */
 #include <stdio.h> /* printf(), perror() */
 #include <stdlib.h> 
+#include <string.h>
 #include "properties.h" /* informacoes para rodar */
 #include <sys/types.h> /* AF_INET, SOCK_STREAM */
 #include <sys/socket.h> /* socket(), connect(), recv() */
