@@ -11,10 +11,11 @@
 #include <arpa/inet.h>  /* htons(), inet_addr() */
 #include <sys/types.h> /* AF_INET, SOCK_STREAM */
 #include <ctype.h> /* isdigit*/
+#include <strings.h> /* bzero() */
 
 int main(int argc, char *argv[]) {
     int client;
-    struct sockaddr_in server_address, client_address; /* socket do servidor e cliente  */
+    struct sockaddr_in server_address; /* socket do servidor e cliente  */
     int pdu; /* o tamanho da mensagem */
 
     /* Verifica se o PDU foi enviado pelo argc  */
@@ -22,12 +23,14 @@ int main(int argc, char *argv[]) {
 	  perror("CLIENT: Digite PDU de enlace");
 	  exit(0); 
     }
+    printf("CLIENT: Verifica se o PDU foi enviado pelo argc\n");
     
     /* Verifica se o PDU é um número */
     if (!isdigit(*argv[1])){
         perror("CLIENT: O PDU de enlace deve ser um número");
 	    exit(0); 
     }
+    printf("CLIENT: Verifica se o PDU é um número\n");
     /* o tamanho da mensagem pdu*/
     pdu = atoi(argv[1]); 
     char message[pdu];
@@ -42,29 +45,33 @@ int main(int argc, char *argv[]) {
         perror("CLIENT: Criação do socket falhou");
         exit(0);
     }
+    printf("CLIENT: Criacao do socket TCP\n");
 
     /* Preenchendo informacoes sobre o cliente */
-    client_address.sin_family = AF_INET;
-    client_address.sin_addr.s_addr = inet_addr(CLIENT_HOST); 
-    client_address.sin_port = htons(CLIENT_PORT);
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr(HOST); 
+    server_address.sin_port = htons(PORT);
 
     /* Inicia a conexão no socket */
-    if (connect(client, (struct sockaddr *)&client_address, sizeof(client_address))<0){
+    if (connect(client, (struct sockaddr *)&server_address, sizeof(server_address))<0){
         perror("CLIENT: Não pode conectar no Socket");
         exit(0);
     }
+    printf("CLIENT: Inicia a conexão no socket\n");
 
     /* Enviar pdu para o server  */
-    char pdu_size = pdu +'0\0';
-    send(client, (void *)pdu_size, sizeof (pdu_size), 0);
+    send(client, argv[1], 10, 0);
+    printf("CLIENT: Mandei o PDU:%s\n", argv[1]);
 
-    printf("CLIENT: Conectado no IP: %s, porta TCP numero: %d\n", CLIENT_HOST, CLIENT_PORT);
+    printf("CLIENT: Conectado no IP: %s, porta TCP numero: %d\n", HOST, PORT);
     while (1){
+        bzero(message, pdu); /* apaga a informacao*/
+        
         printf("CLIENT: Esperando por mensagem:\n");
-
         fgets(message, sizeof(message), stdin);
-        message[strlen(message)-1] = '\0';
+        
         send(client, message, sizeof (message), 0);
+        printf("CLIENT: Mandei:%s\n", message);
         if (!strcmp (message, "exit")) {
             exit (0);
         }
