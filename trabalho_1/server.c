@@ -18,14 +18,12 @@ int main(int argc, char *argv[]){
 
     struct sockaddr_in server_address, client_address; /* socket do servidor e cliente  */
 
-    printf("SERVER: Verifica se o PDU foi enviado pelo argc\n");
     /* Verifica se o PDU foi enviado pelo argc  */
     if (argc<2) {
 	  perror("SERVER: Digite PDU de enlace");
 	  exit(0); 
     }
     
-    printf("SERVER: Verifica se o PDU é um número\n");
     /* Verifica se o PDU é um número */
     if (!isdigit(*argv[1])){
         perror("SERVER: O PDU de enlace deve ser um número");
