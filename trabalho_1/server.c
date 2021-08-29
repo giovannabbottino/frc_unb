@@ -5,9 +5,8 @@
 #include <stdio.h> /* printf(), perror() */
 #include <stdlib.h> 
 #include "properties.h" /* informacoes para rodar */
-#include <ctype.h> /* isdigit*/
 #include <sys/types.h> /* AF_INET, SOCK_STREAM */
-#include <sys/socket.h> /* socket(), connect() */
+#include <sys/socket.h> /* socket(), connect(), recv() */
 #include <netinet/in.h> /* struct sockaddr_in */
 #include <arpa/inet.h>  /* htons(), inet_addr() */
 
@@ -43,17 +42,25 @@ int main(int argc, char *argv[]){
     /*  numero maximo de conexões */
     listen(server, 5);
 
+    /* Aceita conexoes direta entre o servidor e cliente */
+    client_size = sizeof(client_address);
+    if ( client = accept(server, (struct sockaddr *) &client_address, &client_size) == 1 ){
+        perror("SERVER: Não pode dar accept na CLIENT_PORT");
+        exit(0);
+    }
+
     /* Receber pdu do client  */
+    char pdu_size[10];
+    recv (client, pdu_size, 10, 0);
+    /* o tamanho da mensagem pdu*/
+    pdu = atoi(pdu_size); 
+    char message[pdu];
+
+    printf("SERVER: Recebido o PDU da CLIENT_PORT: %d\n", pdu);
 
     printf("SERVER: Esperando por dados no IP: %s, porta TCP numero: %d\n", SERVER_HOST, SERVER_PORT);
 
     while(1){
-        /* Aceita conexoes direta entre o servidor e cliente */
-        client_size = sizeof(client_address);
-        if ( client = accept(server, (struct sockaddr *) &client_address, &client_size) == 1 ){
-            perror("SERVER: Não pode dar accept na CLIENT_PORT");
-            exit(0);
-        }
 
         /* Receber fila de mensagens*/
 

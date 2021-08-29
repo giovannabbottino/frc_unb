@@ -6,7 +6,10 @@
 #include <stdlib.h> 
 #include "properties.h" /* informacoes para rodar */
 #include <netinet/in.h> /* struct sockaddr_in */
-#include <sys/socket.h> /* connect */
+#include <sys/socket.h> /* connect() send() */
+#include <arpa/inet.h>  /* htons(), inet_addr() */
+#include <sys/types.h> /* AF_INET, SOCK_STREAM */
+#include <ctype.h> /* isdigit*/
 
 int main(int argc, char *argv[]) {
     int client;
@@ -55,9 +58,21 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
+    /* Enviar pdu para o server  */
+    char pdu_size = pdu +'0';
+    pdu_size[strlen(pdu_size)-1] = '\0';
+    send(client, pdu_size, sizeof (pdu_size), 0);
+
     printf("CLIENT: Conectado no IP: %s, porta TCP numero: %d\n", CLIENT_HOST, CLIENT_PORT);
     while (1){
-        printf("CLIENT: Esperando por mensagem\n");
+        printf("CLIENT: Esperando por mensagem:\n");
+
+        fgets(message, sizeof(message), stdin);
+        message[strlen(message)-1] = '\0';
+        send(client, message, sizeof (message), 0);
+        if (!strcmp (message, "exit")) {
+            exit (0);
+        }
 
     }
 
