@@ -18,22 +18,6 @@ int main(int argc, char *argv[]){
 
     struct sockaddr_in server_address, client_address; /* socket do servidor e cliente  */
 
-    /* Verifica se o PDU foi enviado pelo argc  */
-    if (argc<2) {
-	  perror("SERVER: Digite PDU de enlace");
-	  exit(0); 
-    }
-    
-    /* Verifica se o PDU é um número */
-    if (!isdigit(*argv[1])){
-        perror("SERVER: O PDU de enlace deve ser um número");
-	    exit(0); 
-    }
-    /* o tamanho da mensagem pdu*/
-    pdu = atoi(argv[1]); 
-    char message[pdu];
-    printf("SERVER: PDU: %d\n", pdu);
-
     /* Criacao do socket TCP */
     if ((server = socket(AF_INET, SOCK_STREAM, 0)) == 0){ 
         /*
@@ -58,6 +42,8 @@ int main(int argc, char *argv[]){
 
     /*  numero maximo de conexões */
     listen(server, 5);
+
+    /* Receber pdu do client  */
 
     printf("SERVER: Esperando por dados no IP: %s, porta TCP numero: %d\n", SERVER_HOST, SERVER_PORT);
 
