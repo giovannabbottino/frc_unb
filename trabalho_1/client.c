@@ -4,6 +4,7 @@
 */
 #include <stdio.h> /* printf(), perror() */
 #include <stdlib.h> 
+#include <string.h>
 #include "properties.h" /* informacoes para rodar */
 #include <netinet/in.h> /* struct sockaddr_in */
 #include <sys/socket.h> /* connect() send() */
@@ -59,9 +60,8 @@ int main(int argc, char *argv[]) {
     }
 
     /* Enviar pdu para o server  */
-    char pdu_size = pdu +'0';
-    pdu_size[strlen(pdu_size)-1] = '\0';
-    send(client, pdu_size, sizeof (pdu_size), 0);
+    char pdu_size = pdu +'0\0';
+    send(client, (void *)pdu_size, sizeof (pdu_size), 0);
 
     printf("CLIENT: Conectado no IP: %s, porta TCP numero: %d\n", CLIENT_HOST, CLIENT_PORT);
     while (1){
