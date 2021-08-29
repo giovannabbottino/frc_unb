@@ -6,6 +6,7 @@
 #include <stdlib.h> 
 #include "properties.h" /* informacoes para rodar */
 #include <netinet/in.h> /* struct sockaddr_in */
+#include <sys/socket.h> /* connect */
 
 int main(int argc, char *argv[]) {
     int client;
@@ -32,9 +33,12 @@ int main(int argc, char *argv[]) {
     client_address.sin_addr.s_addr = inet_addr(CLIENT_HOST); 
     client_address.sin_port = htons(CLIENT_PORT);
 
-    /* Conecta na porta */
-    if (bind(client, (struct sockaddr *)&client_address, sizeof(client_address))<0){
-        perror("CLIENT: Não pode fazer bind na porta CLIENT_PORT");
+    /* Inicia a conexão no socket */
+    if (connect(client, (struct sockaddr *)&client_address, sizeof(client_address))<0){
+        perror("CLIENT: Não pode conectar no Socket");
         exit(0);
     }
+
+    printf("CLIENT: Conectado no IP: %s, porta TCP numero: %d\n", CLIENT_HOST, CLIENT_PORT);
+
 }
