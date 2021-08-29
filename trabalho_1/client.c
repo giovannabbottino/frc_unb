@@ -43,11 +43,6 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    /* Preenchendo informacoes sobre o servidor */
-    server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = inet_addr(SERVER_HOST); 
-    server_address.sin_port = htons(SERVER_PORT);
-
     /* Preenchendo informacoes sobre o cliente */
     client_address.sin_family = AF_INET;
     client_address.sin_addr.s_addr = inet_addr(CLIENT_HOST); 
