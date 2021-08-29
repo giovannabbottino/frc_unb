@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
     while(1){
         bzero(message, pdu); /* apaga a informacao*/
         
-        if (recv(client, message, pdu, 0) > 0 && (!strcmp (message, "")){
+        if (recv(client, message, pdu, 0) > 0 && (!strcmp (message, ""))){
             printf("SERVER: Recebido o PDU da PORT: %d\n", pdu);
             printf("SERVER: Recebida a mensagem: %s\n", message);
         }
