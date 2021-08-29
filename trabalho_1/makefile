@@ -1,5 +1,6 @@
+all: src/server.c src/client.c
+	gcc src/server.c -o bin/server -I./inc
+	gcc src/client.c -o bin/client -I./inc
 
-
-all: server.c client.c
-	gcc server.c -o server
-	gcc client.c -o client
+run:
+	bin/server & bin/client $(pdu)
