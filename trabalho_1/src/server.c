@@ -4,6 +4,13 @@
 */
 #include <properties.h>
 
+void response_server(char * message, int client){
+    if (send(client, message, sizeof(message) + 1, 0) < 0){
+        perror("[SERVER] Não foi possivel responder a mensagem");
+    }
+}
+
+
 int main(int argc, char *argv[]){
     int server, client;
     int pdu = -1; /* o tamanho da mensagem */
@@ -50,13 +57,23 @@ int main(int argc, char *argv[]){
     printf("[SERVER] Aceita conexoes direta\n");
 
     /* Recebe PDU */
-    char pdu_size[9];
-    if (recv(client, pdu_size, 10, 0) < 0){
+    char pdu_message[9];
+    int counter=0;
+    while (pdu < 0){
+        if (recv(client, pdu_message, 10, 0) < 0){
             perror("[SERVER] Não foi possivel receber o PDU");
-            printf("[SERVER] PDU será: %d\n", pdu);
-    } else{
-        pdu = atoi(pdu_size);
-        printf("[SERVER] Recebido o PDU do CLIENT: %d\n", pdu);
+        } else{
+            pdu = atoi(pdu_message);
+            printf("[SERVER] Recebido o PDU do CLIENT: %d\n", pdu);
+        }
+
+        /* para responder */
+        response_server(pdu_message, client);
+        counter++;
+        if(counter>=3){
+            perror("[SERVER] Não foi possivel receber o PDU. PDU será 200");
+            pdu = 200;
+        }
     }
     char message[pdu];
 
@@ -69,10 +86,21 @@ int main(int argc, char *argv[]){
         if (recv(client, message, pdu, 0) < 0){
             perror("[SERVER] Não foi possivel receber a mensagem");
         } else{
+            /* para sair */
             if (!strcmp(message, "exit\n")){ 
                 exit(0);
             }
             printf("[SERVER] Recebida a mensagem: %s\n", message);
+            
+            /* para responder */
+            if (!strcmp(message, "de erro\n")){ 
+                /* para dar erro */
+                char texto[100];
+                strcpy(texto, "não é sua mensagem :p\n");
+                response_server(texto, client);
+            } else{
+                response_server(message, client);
+            }
         }
     }   
 }

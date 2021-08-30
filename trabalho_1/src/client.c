@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
     int client;
     struct sockaddr_in server_address; /* socket do servidor e cliente  */
     int pdu; /* o tamanho da mensagem */
+    char server_message[2000];
 
     /* Verifica se o PDU foi enviado pelo argc  */
     if (argc<2) {
@@ -53,11 +54,28 @@ int main(int argc, char *argv[]) {
     printf("[CLIENT] Inicia a conexão no socket\n");
 
     /* Enviar pdu para o server  */
-    if(send(client, argv[1], 10, 0) < 0){
-        perror("[CLIENT] Falha no envio");
-        /* Receber confirmação da pdu  */
-    } else{
-        printf("[CLIENT] Mandei o PDU:%s\n", argv[1]);
+    int counter=0;
+    while(strcmp(server_message, argv[1])){
+        if(send(client, argv[1], 10, 0) < 0){
+            perror("[CLIENT] Falha no envio da PDU");
+            /* Receber confirmação da pdu  */
+        } else{
+            printf("[CLIENT] Mandei o PDU:%s\n", argv[1]);
+        }
+
+        bzero(server_message, 2000); /* apaga a informacao*/
+        if(recv(client, server_message, sizeof(server_message), 0) < 0){
+            perror("[CLIENT] Falha ao receber resposta");
+        }
+        
+        printf("[CLIENT] Resposta do server: %s\n",server_message);
+
+        counter++;
+        if(counter>=3){
+            perror("[CLIENT] Falha no envio da PDU para SERVER. PDU será 200");
+            pdu=200;
+            break;
+        }
     }
 
     printf("[CLIENT] Conectado no IP: %s, porta TCP numero: %d\n", HOST, PORT);
@@ -69,14 +87,35 @@ int main(int argc, char *argv[]) {
         fgets(message, sizeof(message), stdin);
         
         /* Verifica se mensagem foi enviada */
-        if(send(client, message, sizeof(message), 0) < 0){
-            perror("[CLIENT] Falha no envio");
-        } else{
-            printf("[CLIENT] Mensagem enviada foi: %s\n", message);
-        }
-        /* para caso exit */
-        if (!strcmp(message, "exit\n")) {
-            exit(0);
-        }
+        int counter=0;
+        do {
+            bzero(server_message, 2000); /* apaga a informacao*/
+            if(send(client, message, sizeof(message), 0) < 0){
+                perror("[CLIENT] Falha no envio");
+            } else{
+                printf("[CLIENT] Mensagem enviada foi: %s\n", message);
+            }
+            /* para caso exit */
+            if (!strcmp(message, "exit\n")) {
+                exit(0);
+            }
+            
+            if(recv(client, server_message, sizeof(server_message), 0) < 0){
+                perror("[CLIENT] Falha ao receber resposta");
+            }
+            
+            printf("[CLIENT] Resposta do server: %s\n",server_message);
+
+            /* para dar erro */
+            /* envie: de erro */
+            if (strcmp(server_message, message)){
+                counter++;
+            } 
+            if (counter>=3){
+                perror("[CLIENT] Mensagem não pode ser enviada");
+                printf("[CLIENT] Mensagem cancelada foi: %s\n", message);
+                break;
+            }
+        }while(strcmp(server_message, message));
     }
 }
