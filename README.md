@@ -2,7 +2,7 @@
 
 ## Trabalho 1 
 
-Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação contendo protocolo em modo simplex e orientado à conexão.
+Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação contendo protocolo em modo simplex, diálogo ponto-a-ponto, stop-and-wait e orientado à conexão.
 
 ### Executar
 
