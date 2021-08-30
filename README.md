@@ -6,7 +6,7 @@ Trata-se de uma simulação do modelo de Referência OSI pela construção de um
 
 ### Executar
 
-Para utilizar esse projeto basta clonar esse [repositorio](https://github.com/giovannabbottino/frc.git) e rodar os seguintes comandos. Deve-se ter CPP instalado.
+Para utilizar esse projeto basta clonar esse [repositorio](https://github.com/giovannabbottino/frc.git) e rodar os seguintes comandos. Deve-se ter CPP instalado. Não esqueça de entrar na pasta trabalho_1.
 
 Para buildar de o seguinte comando:
 ~~~
