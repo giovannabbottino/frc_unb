@@ -1,12 +1,12 @@
 # Fundamentos de Redes de Computadores
 
-## Trabalho 1 
+## Trabalho 1 part 1
 
 Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação contendo protocolo em modo simplex e orientado à conexão.
 
 ### Executar
 
-Para utilizar esse projeto basta clonar esse [repositorio](https://github.com/giovannabbottino/frc.git) e rodar os seguintes comandos. Deve-se ter CPP instalado. Não esqueça de entrar na pasta trabalho_1.
+Para utilizar esse projeto basta clonar esse [repositorio](https://github.com/giovannabbottino/frc.git) e rodar os seguintes comandos. Deve-se ter CPP instalado. Não esqueça de entrar na pasta trabalho_1_part1.
 
 Para buildar de o seguinte comando:
 ~~~
