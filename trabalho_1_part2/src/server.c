@@ -4,17 +4,18 @@
 */
 #include <properties.h>
 
-void response_server(char * message, int client){
-    if (send(client, message, sizeof(message) + 1, 0) < 0){
+void response_server(char * receive_message, int client){
+    if (send(client, receive_message, sizeof(receive_message) + 1, 0) < 0){
         perror("[SERVER] Não foi possivel responder a mensagem");
     }
 }
-
 
 int main(int argc, char *argv[]){
     int server, client;
     int pdu = -1; /* o tamanho da mensagem */
     socklen_t client_size;
+    char client_message[2000];
+    pid_t process_id; /*Process Identification*/
 
     struct sockaddr_in server_address, client_address; /* socket do servidor e cliente  */
 
@@ -67,6 +68,12 @@ int main(int argc, char *argv[]){
             printf("[SERVER] Recebido o PDU do CLIENT: %d\n", pdu);
         }
 
+        /* para sair */
+        if (!strcmp(pdu_message, "exit")){ 
+            perror("[SERVER] Erro no PDU do CLIENT");
+            return 1;
+        }
+
         /* para responder */
         response_server(pdu_message, client);
         counter++;
@@ -75,32 +82,70 @@ int main(int argc, char *argv[]){
             pdu = 200;
         }
     }
-    char message[pdu];
+    char receive_message[pdu];
+    char send_message[pdu];
 
     printf("[SERVER] Esperando por dados no IP: %s, porta TCP numero: %d\n", HOST, PORT);
 
-    while(1){
-        bzero(message, pdu); /* apaga a informacao*/
-        
+    /*Fork para criar um novo processo*/
+    process_id=fork();
+    if(process_id==0){
         /* Receber a mensagem */
-        if (recv(client, message, pdu, 0) < 0){
-            perror("[SERVER] Não foi possivel receber a mensagem");
-        } else{
-            /* para sair */
-            if (!strcmp(message, "exit\n")){ 
-                exit(0);
-            }
-            printf("[SERVER] Recebida a mensagem: %s\n", message);
-            
-            /* para responder */
-            if (!strcmp(message, "de erro\n")){ 
-                /* para dar erro */
-                char texto[100];
-                strcpy(texto, "não é sua mensagem :p\n");
-                response_server(texto, client);
+        while(1){
+            bzero(receive_message, pdu); /* apaga a informacao*/
+            if (recv(client, receive_message, pdu, 0) < 0){
+                perror("[SERVER] Não foi possivel receber a mensagem");
             } else{
-                response_server(message, client);
+                printf("[SERVER] Recebida a mensagem: %s\n", receive_message);
+                
+                /* para responder */
+                if (!strcmp(receive_message, "de erro\n")){ 
+                    /* para dar erro */
+                    char texto[100];
+                    strcpy(texto, "não é sua mensagem :p\n");
+                    response_server(texto, client);
+                } else{
+                    response_server(receive_message, client);
+                }
             }
+        }
+    } else{
+        
+        /* envia a mensagem */
+        while(1){
+            bzero(send_message, pdu); /* apaga a informacao*/
+            
+            /* Menu de interação */
+            printf("[SERVER] Esperando por mensagem:\n");
+            fgets(send_message, sizeof(send_message), stdin);
+            
+            /* Verifica se mensagem foi enviada */
+            int counter=0;
+            do {
+                bzero(client_message, 2000); /* apaga a informacao*/
+                if(send(client, send_message, sizeof(send_message), 0) < 0){
+                    perror("[SERVER] Falha no envio");
+                } else{
+                    printf("[SERVER] Mensagem enviada foi: %s\n", send_message);
+                }
+                
+                if(recv(client, client_message, sizeof(client_message), 0) < 0){
+                    perror("[SERVER] Falha ao receber resposta");
+                }
+                
+                printf("[SERVER] Resposta do server: %s\n",client_message);
+
+                /* para dar erro */
+                /* envie: de erro */
+                if (strcmp(client_message, send_message)){
+                    counter++;
+                } 
+                if (counter>=3){
+                    perror("[SERVER] Mensagem não pode ser enviada");
+                    printf("[SERVER] Mensagem cancelada foi: %s\n", send_message);
+                    break;
+                }
+            }while(strcmp(client_message, send_message));
         }
     }   
 }
