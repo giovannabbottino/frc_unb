@@ -3,7 +3,7 @@
 
 ## Trabalho 1 part 1
 
-Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação contendo protocolo em modo simplex, diálogo ponto-a-ponto, stop-and-wait e orientado à conexão.
+Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação TCP contendo protocolo em modo simplex, diálogo ponto-a-ponto, stop-and-wait e orientado à conexão.
 
 ### Executar
 
@@ -23,7 +23,7 @@ Esse VALOR deve ser um número inteiro.
 
 ## Trabalho 1 part 2
 
-Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação contendo protocolo em modo full-duplex, diálogo ponto-a-ponto, stop-and-wait e orientado à conexão.
+Trata-se de uma simulação do modelo de Referência OSI pela construção de um protótipo de camada de enlace de dados. É uma implementação TCP contendo protocolo em modo full-duplex, diálogo ponto-a-ponto, stop-and-wait e orientado à conexão.
 
 ### Executar
 
